@@ -57,15 +57,17 @@ func (middleware ShowErrorsMiddleware) RenderError(w ResponseWriter, r *Request,
 }
 
 func (middleware ShowErrorsMiddleware) ServeHTTP(w ResponseWriter, r *Request, next NextMiddlewareFunc) {
-	defer func() {
-		if err := recover(); err != nil {
-			const size = 4096
-			stack := make([]byte, size)
-			stack = stack[:runtime.Stack(stack, false)]
+	if strings.Contains(r.Header.Get("Accept"), "text/html") {
+		defer func() {
+			if err := recover(); err != nil {
+				const size = 4096
+				stack := make([]byte, size)
+				stack = stack[:runtime.Stack(stack, false)]
 
-			middleware.RenderError(w, r, err, stack)
-		}
-	}()
+				middleware.RenderError(w, r, err, stack)
+			}
+		}()
+	}
 
 	if nextMiddleware := next(); nextMiddleware != nil {
 		nextMiddleware.ServeHTTP(w, r, next)
