@@ -1,14 +1,17 @@
 package traffic
 
 import (
+	"bufio"
 	"encoding/json"
 	"encoding/xml"
 	"fmt"
+	"net"
 	"net/http"
 )
 
 type ResponseWriter interface {
 	http.ResponseWriter
+	http.Hijacker
 	SetVar(string, interface{})
 	GetVar(string) interface{}
 	StatusCode() int
@@ -22,6 +25,7 @@ type ResponseWriter interface {
 
 type responseWriter struct {
 	http.ResponseWriter
+	http.Hijacker
 	written             bool
 	bodyWritten         bool
 	statusCode          int
@@ -41,6 +45,10 @@ func (w *responseWriter) WriteHeader(statusCode int) {
 	w.statusCode = statusCode
 	w.ResponseWriter.WriteHeader(statusCode)
 	w.written = true
+}
+
+func (w *responseWriter) Hijack() (net.Conn, *bufio.ReadWriter, error) {
+	return w.ResponseWriter.(http.Hijacker).Hijack()
 }
 
 func (w *responseWriter) StatusCode() int {
