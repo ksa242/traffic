@@ -53,7 +53,7 @@ func GetVar(key string) interface{} {
 	return nil
 }
 
-func getStringVar(key string) string {
+func GetStringVar(key string) string {
 	value := GetVar(key)
 	if s, ok := value.(string); ok {
 		return s
@@ -97,8 +97,8 @@ func pathToRegexp(routePath string) (*regexp.Regexp, bool) {
 	return regexp.MustCompile(s), isStatic
 }
 
-func getStringVarWithDefault(key, defaultValue string) string {
-	value := getStringVar(key)
+func GetStringVarWithDefault(key, defaultValue string) string {
+	value := GetStringVar(key)
 	if value == "" {
 		return defaultValue
 	}
@@ -107,15 +107,15 @@ func getStringVarWithDefault(key, defaultValue string) string {
 }
 
 func Env() string {
-	return getStringVarWithDefault("env", EnvDevelopment)
+	return GetStringVarWithDefault("env", EnvDevelopment)
 }
 
 func RootPath() string {
-	return getStringVarWithDefault("root", ".")
+	return GetStringVarWithDefault("root", ".")
 }
 
 func ViewsPath() string {
-	viewsPath := getStringVarWithDefault("views", DefaultViewsPath)
+	viewsPath := GetStringVarWithDefault("views", DefaultViewsPath)
 	if path.IsAbs(viewsPath) {
 		return viewsPath
 	}
@@ -124,7 +124,7 @@ func ViewsPath() string {
 }
 
 func ConfigFilePath() string {
-	filePath := getStringVarWithDefault("config_file", DefaultConfigFile)
+	filePath := GetStringVarWithDefault("config_file", DefaultConfigFile)
 	if path.IsAbs(filePath) {
 		return filePath
 	}
@@ -133,7 +133,7 @@ func ConfigFilePath() string {
 }
 
 func PublicPath() string {
-	publicPath := getStringVarWithDefault("public", DefaultPublicPath)
+	publicPath := GetStringVarWithDefault("public", DefaultPublicPath)
 	if path.IsAbs(publicPath) {
 		return publicPath
 	}
@@ -169,7 +169,7 @@ func Port() int {
 }
 
 func Host() string {
-	host := getStringVarWithDefault("host", DefaultHost)
+	host := GetStringVarWithDefault("host", DefaultHost)
 
 	return host
 }

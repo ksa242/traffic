@@ -33,9 +33,22 @@ func TestGetVar(t *testing.T) {
 func TestGetStringVar(t *testing.T) {
 	resetGlobalEnv()
 
-	assert.Equal(t, "", getStringVar("foo"))
+	assert.Equal(t, "", GetStringVar("foo"))
 	SetVar("foo", "bar")
-	assert.Equal(t, "bar", getStringVar("foo"))
+	assert.Equal(t, "bar", GetStringVar("foo"))
+
+	resetGlobalEnv()
+}
+
+func TestGetStringVarWithDefault(t *testing.T) {
+	resetGlobalEnv()
+
+	assert.Equal(t, "", GetStringVarWithDefault("foo", ""))
+	assert.Equal(t, "zulu", GetStringVarWithDefault("foo", "zulu"))
+
+	SetVar("foo", "bar")
+	assert.Equal(t, "bar", GetStringVarWithDefault("foo", ""))
+	assert.Equal(t, "bar", GetStringVarWithDefault("foo", "zulu"))
 
 	resetGlobalEnv()
 }
